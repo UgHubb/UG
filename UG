@@ -1,0 +1,1548 @@
+local DarkraiX = loadstring(game:HttpGet("https://raw.githubusercontent.com/GamingScripter/Kavo-Ui/main/Darkrai%20Ui", true))()
+local Library = DarkraiX:Window("⚡️UG HUB⚡️","GPO","",Enum.KeyCode.RightControl);
+
+--[[
+DarkraiX:Window(
+1 = ⚡️UG HUB⚡️ (string)
+2 = GPO (You Can Keep This Empty To Get The Current Game Name!) (string)
+3 = A Logo If You Have One! (string)
+4 = Ui Library Toggle (I'll Not Prefer Touching It) (function)
+);
+]]
+
+-- Misc
+
+Tab1 = Library:Tab("Main")
+
+Tab1:Button("Dash No Stamina Drain",function()
+    local takestam = game.ReplicatedStorage.Events.takestam
+local X;
+X = hookmetamethod(game, "__namecall", function(self, ...)
+    if self == takestam then --put the takestam remote into a local variable so the script looks cleaner
+        return; --blocks remote
+    end
+    return X(self, ...)
+end)
+for i,v in pairs(getreg()) do
+    if type(v) == 'function' and islclosure(v) then --I forgot to remove the getfenv script check, using getfenv on every function in registry deoptimizes the game so only use it when dumping the upvalues in a script
+        if #(getupvalues(v)) >= 12 and tostring(getupvalue(v,12)) == "Ragdolls" then --checks for this unique upvalue to find the correct function in registry
+            spawn(function()
+                while task.wait() do
+                    setupvalue(v, 6, false) 
+                end
+            end)
+            break;
+        end
+    end
+end
+end)
+
+
+Tab1:Button("Hitbox Toggle Y",function()
+    local player = game.Players.LocalPlayer
+local mouse = player:GetMouse()
+
+-- Bind
+
+bind = "" 
+bind2 = "y"
+
+-- Script
+
+mouse.KeyDown:connect(function(key)
+if key == bind then
+player.Character.HumanoidRootPart.CFrame = CFrame.new(1254.09656, 137.906067, -172.128204)
+end
+end)
+
+mouse.KeyDown:connect(function(key2)
+if key2 == bind2 then
+_G.HeadSize = 50
+_G.Disabled = true
+
+
+if _G.Disabled then
+for i,v in next, game:GetService('Players'):GetPlayers() do
+if v.Name ~= game:GetService('Players').LocalPlayer.Name then
+pcall(function()
+v.Character.HumanoidRootPart.Size = Vector3.new(_G.HeadSize,_G.HeadSize,_G.HeadSize)
+v.Character.HumanoidRootPart.Transparency = 0.9
+v.Character.HumanoidRootPart.BrickColor = BrickColor.new("Really blue")
+v.Character.HumanoidRootPart.Material = "Neon"
+v.Character.HumanoidRootPart.CanCollide = false
+end)
+end
+end
+end
+end
+end)
+end)
+--[[
+Tab1:Button(
+1 = Button Name (string)
+2 = callback (function)
+]]
+
+--[[
+Tab1:Button(
+1 = Button Name (string)
+2 = callback (function)
+]]
+
+Tab1:Button("Infinity Jump L",function()
+_G.infinjump = true
+ 
+local Player = game:GetService("Players").LocalPlayer
+local Mouse = Player:GetMouse()
+Mouse.KeyDown:connect(function(k)
+if _G.infinjump then
+if k:byte() == 32 then
+Humanoid = game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+Humanoid:ChangeState("Jumping")
+wait(0.1)
+Humanoid:ChangeState("Seated")
+end
+end
+end)
+ 
+local Player = game:GetService("Players").LocalPlayer
+local Mouse = Player:GetMouse()
+Mouse.KeyDown:connect(function(k)
+k = k:lower()
+if k == "l" then
+if _G.infinjump == true then
+_G.infinjump = false
+else
+_G.infinjump = true
+end
+end
+end)
+end)
+
+
+Tab1:Button("Aimbot toggle M2",function()
+    --FE Simple AimLock Script | Released Nov 2021 | Working.
+local Area = game:GetService("Workspace")
+local RunService = game:GetService("RunService")
+local UIS = game:GetService("UserInputService")
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local MyCharacter = LocalPlayer.Character
+local MyRoot = MyCharacter:FindFirstChild("HumanoidRootPart")
+local MyHumanoid = MyCharacter:FindFirstChild("Humanoid")
+local Mouse = LocalPlayer:GetMouse()
+local MyView = Area.CurrentCamera
+local MyTeamColor = LocalPlayer.TeamColor
+local HoldingM2 = false
+local Active = false
+local Lock = false
+local Epitaph = 2 ---Note: The Bigger The Number, The More Prediction.
+local HeadOffset = Vector3.new(0, .1, 0)
+
+_G.TeamCheck = false
+_G.AimPart = "HumanoidRootPart"
+_G.Sensitivity = 0
+_G.CircleSides = 64
+_G.CircleColor = Color3.fromRGB(255, 0, 130)
+_G.CircleTransparency = 0
+_G.CircleRadius = 200
+_G.CircleFilled = false
+_G.CircleVisible = true
+_G.CircleThickness = 1
+
+local FOVCircle = Drawing.new("Circle")
+FOVCircle.Position = Vector2.new(MyView.ViewportSize.X / 2, MyView.ViewportSize.Y / 2)
+FOVCircle.Radius = _G.CircleRadius
+FOVCircle.Filled = _G.CircleFilled
+FOVCircle.Color = _G.CircleColor
+FOVCircle.Visible = _G.CircleVisible
+FOVCircle.Transparency = _G.CircleTransparency
+FOVCircle.NumSides = _G.CircleSides
+FOVCircle.Thickness = _G.CircleThickness
+
+local function CursorLock()
+	UIS.MouseBehavior = Enum.MouseBehavior.LockCenter
+end
+local function UnLockCursor()
+	HoldingM2 = false Active = false Lock = false 
+	UIS.MouseBehavior = Enum.MouseBehavior.Default
+end
+function FindNearestPlayer()
+	local dist = math.huge
+	local Target = nil
+	for _, v in pairs(Players:GetPlayers()) do
+		if v ~= LocalPlayer and v.Character:FindFirstChild("Humanoid") and v.Character:FindFirstChild("Humanoid").Health > 0 and v.Character:FindFirstChild("HumanoidRootPart") and v then
+			local TheirCharacter = v.Character
+			local CharacterRoot, Visible = MyView:WorldToViewportPoint(TheirCharacter[_G.AimPart].Position)
+			if Visible then
+				local RealMag = (Vector2.new(Mouse.X, Mouse.Y) - Vector2.new(CharacterRoot.X, CharacterRoot.Y)).Magnitude
+				if RealMag < dist and RealMag < FOVCircle.Radius then
+					dist = RealMag
+					Target = TheirCharacter
+				end
+			end
+		end
+	end
+	return Target
+end
+
+UIS.InputBegan:Connect(function(Input)
+	if Input.UserInputType == Enum.UserInputType.MouseButton2 then
+		HoldingM2 = true
+		Active = true
+		Lock = true
+		if Active then
+        	local The_Enemy = FindNearestPlayer()
+			while HoldingM2 do task.wait(.000001)
+				if Lock and The_Enemy ~= nil then
+					local Future = The_Enemy.HumanoidRootPart.CFrame + (The_Enemy.HumanoidRootPart.Velocity * Epitaph + HeadOffset)
+					MyView.CFrame = CFrame.lookAt(MyView.CFrame.Position, Future.Position)
+					CursorLock()
+				end
+			end
+		end
+	end
+end)
+UIS.InputEnded:Connect(function(Input)
+	if Input.UserInputType == Enum.UserInputType.MouseButton2 then
+		UnLockCursor()
+	end
+end)
+end)
+
+--[[
+Tab1:Button(
+1 = Button Name (string)
+2 = callback (function)
+]]
+-- esp
+
+Tab2 = Library:Tab("ESP")
+
+Tab2:Button("ESP",function()
+    local ESP = {
+        Enabled = true,
+        Boxes = true,
+        BoxShift = CFrame.new(0,-1.5,0),
+        BoxSize = Vector3.new(4,6,0),
+        Color = Color3.fromRGB(255, 170, 0),
+        FaceCamera = false,
+        Names = true,
+        TeamColor = true,
+        Thickness = 0.5,
+        AttachShift = 1,
+        TeamMates = true,
+        Players = true,
+        
+        Objects = setmetatable({}, {__mode="kv"}),
+        Overrides = {}
+    }
+    
+    --Declarations--
+    local cam = workspace.CurrentCamera
+    local plrs = game:GetService("Players")
+    local plr = plrs.LocalPlayer
+    local mouse = plr:GetMouse()
+    
+    local V3new = Vector3.new
+    local WorldToViewportPoint = cam.WorldToViewportPoint
+    
+    --Functions--
+    local function Draw(obj, props)
+        local new = Drawing.new(obj)
+        
+        props = props or {}
+        for i,v in pairs(props) do
+            new[i] = v
+        end
+        return new
+    end
+    
+    function ESP:GetTeam(p)
+        local ov = self.Overrides.GetTeam
+        if ov then
+            return ov(p)
+        end
+        
+        return p and p.Team
+    end
+    
+    function ESP:IsTeamMate(p)
+        local ov = self.Overrides.IsTeamMate
+        if ov then
+            return ov(p)
+        end
+        
+        return self:GetTeam(p) == self:GetTeam(plr)
+    end
+    
+    function ESP:GetColor(obj)
+        local ov = self.Overrides.GetColor
+        if ov then
+            return ov(obj)
+        end
+        local p = self:GetPlrFromChar(obj)
+        return p and self.TeamColor and p.Team and p.Team.TeamColor.Color or self.Color
+    end
+    
+    function ESP:GetPlrFromChar(char)
+        local ov = self.Overrides.GetPlrFromChar
+        if ov then
+            return ov(char)
+        end
+        
+        return plrs:GetPlayerFromCharacter(char)
+    end
+    
+    function ESP:Toggle(bool)
+        self.Enabled = bool
+        if not bool then
+            for i,v in pairs(self.Objects) do
+                if v.Type == "Box" then --fov circle etc
+                    if v.Temporary then
+                        v:Remove()
+                    else
+                        for i,v in pairs(v.Components) do
+                            v.Visible = false
+                        end
+                    end
+                end
+            end
+        end
+    end
+    
+    function ESP:GetBox(obj)
+        return self.Objects[obj]
+    end
+    
+    function ESP:AddObjectListener(parent, options)
+        local function NewListener(c)
+            if type(options.Type) == "string" and c:IsA(options.Type) or options.Type == nil then
+                if type(options.Name) == "string" and c.Name == options.Name or options.Name == nil then
+                    if not options.Validator or options.Validator(c) then
+                        local box = ESP:Add(c, {
+                            PrimaryPart = type(options.PrimaryPart) == "string" and c:WaitForChild(options.PrimaryPart) or type(options.PrimaryPart) == "function" and options.PrimaryPart(c),
+                            Color = type(options.Color) == "function" and options.Color(c) or options.Color,
+                            ColorDynamic = options.ColorDynamic,
+                            Name = type(options.CustomName) == "function" and options.CustomName(c) or options.CustomName,
+                            IsEnabled = options.IsEnabled,
+                            RenderInNil = options.RenderInNil
+                        })
+                        --TODO: add a better way of passing options
+                        if options.OnAdded then
+                            coroutine.wrap(options.OnAdded)(box)
+                        end
+                    end
+                end
+            end
+        end
+    
+        if options.Recursive then
+            parent.DescendantAdded:Connect(NewListener)
+            for i,v in pairs(parent:GetDescendants()) do
+                coroutine.wrap(NewListener)(v)
+            end
+        else
+            parent.ChildAdded:Connect(NewListener)
+            for i,v in pairs(parent:GetChildren()) do
+                coroutine.wrap(NewListener)(v)
+            end
+        end
+    end
+    
+    local boxBase = {}
+    boxBase.__index = boxBase
+    
+    function boxBase:Remove()
+        ESP.Objects[self.Object] = nil
+        for i,v in pairs(self.Components) do
+            v.Visible = false
+            v:Remove()
+            self.Components[i] = nil
+        end
+    end
+    
+    function boxBase:Update()
+        if not self.PrimaryPart then
+            --warn("not supposed to print", self.Object)
+            return self:Remove()
+        end
+    
+        local color
+        if ESP.Highlighted == self.Object then
+           color = ESP.HighlightColor
+        else
+            color = self.Color or self.ColorDynamic and self:ColorDynamic() or ESP:GetColor(self.Object) or ESP.Color
+        end
+    
+        local allow = true
+        if ESP.Overrides.UpdateAllow and not ESP.Overrides.UpdateAllow(self) then
+            allow = false
+        end
+        if self.Player and not ESP.TeamMates and ESP:IsTeamMate(self.Player) then
+            allow = false
+        end
+        if self.Player and not ESP.Players then
+            allow = false
+        end
+        if self.IsEnabled and (type(self.IsEnabled) == "string" and not ESP[self.IsEnabled] or type(self.IsEnabled) == "function" and not self:IsEnabled()) then
+            allow = false
+        end
+        if not workspace:IsAncestorOf(self.PrimaryPart) and not self.RenderInNil then
+            allow = false
+        end
+    
+        if not allow then
+            for i,v in pairs(self.Components) do
+                v.Visible = false
+            end
+            return
+        end
+    
+        if ESP.Highlighted == self.Object then
+            color = ESP.HighlightColor
+        end
+    
+        --calculations--
+        local cf = self.PrimaryPart.CFrame
+        if ESP.FaceCamera then
+            cf = CFrame.new(cf.p, cam.CFrame.p)
+        end
+        local size = self.Size
+        local locs = {
+            TopLeft = cf * ESP.BoxShift * CFrame.new(size.X/2,size.Y/2,0),
+            TopRight = cf * ESP.BoxShift * CFrame.new(-size.X/2,size.Y/2,0),
+            BottomLeft = cf * ESP.BoxShift * CFrame.new(size.X/2,-size.Y/2,0),
+            BottomRight = cf * ESP.BoxShift * CFrame.new(-size.X/2,-size.Y/2,0),
+            TagPos = cf * ESP.BoxShift * CFrame.new(0,size.Y/2,0),
+            Torso = cf * ESP.BoxShift
+        }
+    
+        if ESP.Boxes then
+            local TopLeft, Vis1 = WorldToViewportPoint(cam, locs.TopLeft.p)
+            local TopRight, Vis2 = WorldToViewportPoint(cam, locs.TopRight.p)
+            local BottomLeft, Vis3 = WorldToViewportPoint(cam, locs.BottomLeft.p)
+            local BottomRight, Vis4 = WorldToViewportPoint(cam, locs.BottomRight.p)
+    
+            if self.Components.Quad then
+                if Vis1 or Vis2 or Vis3 or Vis4 then
+                    self.Components.Quad.Visible = true
+                    self.Components.Quad.PointA = Vector2.new(TopRight.X, TopRight.Y)
+                    self.Components.Quad.PointB = Vector2.new(TopLeft.X, TopLeft.Y)
+                    self.Components.Quad.PointC = Vector2.new(BottomLeft.X, BottomLeft.Y)
+                    self.Components.Quad.PointD = Vector2.new(BottomRight.X, BottomRight.Y)
+                    self.Components.Quad.Color = color
+                else
+                    self.Components.Quad.Visible = false
+                end
+            end
+        else
+            self.Components.Quad.Visible = false
+        end
+    
+        if ESP.Names then
+            local TagPos, Vis5 = WorldToViewportPoint(cam, locs.TagPos.p)
+            
+            if Vis5 then
+                self.Components.Name.Visible = true
+                self.Components.Name.Position = Vector2.new(TagPos.X, TagPos.Y)
+                self.Components.Name.Text = self.Name
+                self.Components.Name.Color = color
+                
+                self.Components.Distance.Visible = true
+                self.Components.Distance.Position = Vector2.new(TagPos.X, TagPos.Y + 14)
+                self.Components.Distance.Text = math.floor((cam.CFrame.p - cf.p).magnitude) .."m away"
+                self.Components.Distance.Color = color
+            else
+                self.Components.Name.Visible = false
+                self.Components.Distance.Visible = false
+            end
+        else
+            self.Components.Name.Visible = false
+            self.Components.Distance.Visible = false
+        end
+        
+        if ESP.Tracers then
+            local TorsoPos, Vis6 = WorldToViewportPoint(cam, locs.Torso.p)
+    
+            if Vis6 then
+                self.Components.Tracer.Visible = true
+                self.Components.Tracer.From = Vector2.new(TorsoPos.X, TorsoPos.Y)
+                self.Components.Tracer.To = Vector2.new(cam.ViewportSize.X/2,cam.ViewportSize.Y/ESP.AttachShift)
+                self.Components.Tracer.Color = color
+            else
+                self.Components.Tracer.Visible = false
+            end
+        else
+            self.Components.Tracer.Visible = false
+        end
+    end
+    
+    function ESP:Add(obj, options)
+        if not obj.Parent and not options.RenderInNil then
+            return warn(obj, "has no parent")
+        end
+    
+        local box = setmetatable({
+            Name = options.Name or obj.Name,
+            Type = "Box",
+            Color = options.Color --[[or self:GetColor(obj)]],
+            Size = options.Size or self.BoxSize,
+            Object = obj,
+            Player = options.Player or plrs:GetPlayerFromCharacter(obj),
+            PrimaryPart = options.PrimaryPart or obj.ClassName == "Model" and (obj.PrimaryPart or obj:FindFirstChild("HumanoidRootPart") or obj:FindFirstChildWhichIsA("BasePart")) or obj:IsA("BasePart") and obj,
+            Components = {},
+            IsEnabled = options.IsEnabled,
+            Temporary = options.Temporary,
+            ColorDynamic = options.ColorDynamic,
+            RenderInNil = options.RenderInNil
+        }, boxBase)
+    
+        if self:GetBox(obj) then
+            self:GetBox(obj):Remove()
+        end
+    
+        box.Components["Quad"] = Draw("Quad", {
+            Thickness = self.Thickness,
+            Color = color,
+            Transparency = 1,
+            Filled = false,
+            Visible = self.Enabled and self.Boxes
+        })
+        box.Components["Name"] = Draw("Text", {
+            Text = box.Name,
+            Color = box.Color,
+            Center = true,
+            Outline = true,
+            Size = 19,
+            Visible = self.Enabled and self.Names
+        })
+        box.Components["Distance"] = Draw("Text", {
+            Color = box.Color,
+            Center = true,
+            Outline = true,
+            Size = 19,
+            Visible = self.Enabled and self.Names
+        })
+        
+        box.Components["Tracer"] = Draw("Line", {
+            Thickness = ESP.Thickness,
+            Color = box.Color,
+            Transparency = 1,
+            Visible = self.Enabled and self.Tracers
+        })
+        self.Objects[obj] = box
+        
+        obj.AncestryChanged:Connect(function(_, parent)
+            if parent == nil and ESP.AutoRemove ~= false then
+                box:Remove()
+            end
+        end)
+        obj:GetPropertyChangedSignal("Parent"):Connect(function()
+            if obj.Parent == nil and ESP.AutoRemove ~= false then
+                box:Remove()
+            end
+        end)
+    
+        local hum = obj:FindFirstChildOfClass("Humanoid")
+        if hum then
+            hum.Died:Connect(function()
+                if ESP.AutoRemove ~= false then
+                    box:Remove()
+                end
+            end)
+        end
+    
+        return box
+    end
+    
+    local function CharAdded(char)
+        local p = plrs:GetPlayerFromCharacter(char)
+        if not char:FindFirstChild("HumanoidRootPart") then
+            local ev
+            ev = char.ChildAdded:Connect(function(c)
+                if c.Name == "HumanoidRootPart" then
+                    ev:Disconnect()
+                    ESP:Add(char, {
+                        Name = p.Name,
+                        Player = p,
+                        PrimaryPart = c
+                    })
+                end
+            end)
+        else
+            ESP:Add(char, {
+                Name = p.Name,
+                Player = p,
+                PrimaryPart = char.HumanoidRootPart
+            })
+        end
+    end
+    local function PlayerAdded(p)
+        p.CharacterAdded:Connect(CharAdded)
+        if p.Character then
+            coroutine.wrap(CharAdded)(p.Character)
+        end
+    end
+    plrs.PlayerAdded:Connect(PlayerAdded)
+    for i,v in pairs(plrs:GetPlayers()) do
+        if v ~= plr then
+            PlayerAdded(v)
+        end
+    end
+    
+    game:GetService("RunService").RenderStepped:Connect(function()
+        cam = workspace.CurrentCamera
+        for i,v in (ESP.Enabled and pairs or ipairs)(ESP.Objects) do
+            if v.Update then
+                local s,e = pcall(v.Update, v)
+                if not s then warn("[EU]", e, v.Object:GetFullName()) end
+            end
+        end
+    end)
+    
+    return ESP
+    
+end)
+
+--[[
+Tab1:Button(
+1 = Button Name (string)
+2 = callback (function)
+]]
+
+
+-- Trolling
+
+Tab3 = Library:Tab("Trolling")
+
+--[[
+Library:Tab(
+1 = Your Tab Name! (string)
+)
+]]
+
+Tab3:Button("Fruit Rain",function()
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/acsu123/HOHO_H/SCRIPTS/gpo_rain-obfuscated.lua'))()
+end)
+
+--[[
+Tab1:Button(
+1 = Button Name (string)
+2 = callback (function)
+]]
+
+Tab3:Button("Say quangdz in chat ",function()
+    print ("hi")
+end)
+
+Tab3:Button("Credits Ugljesa",function()
+    print("hi")
+end)
+
+--[[
+Tab1:Button(
+1 = Button Name (string)
+2 = callback (function)
+]]
+
+-- Credits
+
+Tab4 = Library:Tab("Config and credit")
+
+--[[
+Library:Tab(
+1 = Your Tab Name! (string)
+)
+]]
+
+Tab4:Button("Made By Ugljesa#0001",function()
+    print("hi")
+end)
+
+--[[
+Tab1:Button(
+1 = Button Name (string)
+2 = callback (function)
+]]
+
+Tab4:Button("Ugljesa#0001 for updates",function()
+    print("hi")
+end)
+
+
+Tab5 = Library:Tab("Paid")
+
+Tab5:Button("Rapid slash spam",function()
+_G.infslash=true
+while _G.infslash == true do
+    wait (0.1)
+game:GetService("ReplicatedStorage").Events.Skill:InvokeServer("Rapid Slashes")
+end
+end)
+
+Tab1:Button("Walkspeed Hold Z Maybe Detectable",function()
+    --Skid this shut as much as u want lmao
+local Player = game:GetService'Players'.LocalPlayer;
+local UIS = game:GetService'UserInputService';
+UIS.InputBegan:connect(function(UserInput)
+        if UserInput.UserInputType == Enum.UserInputType.Keyboard and UserInput.KeyCode == Enum.KeyCode.Z then
+            _G.Running = true
+                while wait(0.005) and _G.Running == true do
+game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame + game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame.lookVector * 1
+game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame + game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame.lookVector * 1
+end
+        end
+end)
+UIS.InputEnded:connect(function(UserInput)
+        if UserInput.UserInputType == Enum.UserInputType.Keyboard and UserInput.KeyCode == Enum.KeyCode.Z then
+                _G.Running = false
+        end
+end)
+end)
+Tab1:Button("Chat Logger",function()
+--This script reveals ALL hidden messages in the default chat
+--chat "/spy" to toggle!
+enabled = true
+--if true will check your messages too
+spyOnMyself = true
+--if true will chat the logs publicly (fun, risky)
+public = false
+--if true will use /me to stand out
+publicItalics = true
+--customize private logs
+privateProperties = {
+	Color = Color3.fromRGB(0,255,255); 
+	Font = Enum.Font.SourceSansBold;
+	TextSize = 18;
+}
+--////////////////////////////////////////////////////////////////
+local StarterGui = game:GetService("StarterGui")
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local saymsg = game:GetService("ReplicatedStorage"):WaitForChild("DefaultChatSystemChatEvents"):WaitForChild("SayMessageRequest")
+local getmsg = game:GetService("ReplicatedStorage"):WaitForChild("DefaultChatSystemChatEvents"):WaitForChild("OnMessageDoneFiltering")
+local instance = (_G.chatSpyInstance or 0) + 1
+_G.chatSpyInstance = instance
+ 
+local function onChatted(p,msg)
+	if _G.chatSpyInstance == instance then
+		if p==player and msg:lower():sub(1,4)=="/spy" then
+			enabled = not enabled
+			wait(0.3)
+			privateProperties.Text = "{SPY "..(enabled and "EN" or "DIS").."ABLED}"
+			StarterGui:SetCore("ChatMakeSystemMessage",privateProperties)
+		elseif enabled and (spyOnMyself==true or p~=player) then
+			msg = msg:gsub("[\n\r]",''):gsub("\t",' '):gsub("[ ]+",' ')
+			local hidden = true
+			local conn = getmsg.OnClientEvent:Connect(function(packet,channel)
+				if packet.SpeakerUserId==p.UserId and packet.Message==msg:sub(#msg-#packet.Message+1) and (channel=="All" or (channel=="Team" and public==false and Players[packet.FromSpeaker].Team==player.Team)) then
+					hidden = false
+				end
+			end)
+			wait(1)
+			conn:Disconnect()
+			if hidden and enabled then
+				if public then
+					saymsg:FireServer((publicItalics and "/me " or '').."{SPY} [".. p.Name .."]: "..msg,"All")
+				else
+					privateProperties.Text = "{SPY} [".. p.Name .."]: "..msg
+					StarterGui:SetCore("ChatMakeSystemMessage",privateProperties)
+				end
+			end
+		end
+	end
+end
+ 
+for _,p in ipairs(Players:GetPlayers()) do
+	p.Chatted:Connect(function(msg) onChatted(p,msg) end)
+end
+Players.PlayerAdded:Connect(function(p)
+	p.Chatted:Connect(function(msg) onChatted(p,msg) end)
+end)
+privateProperties.Text = "{UG "..(enabled and "HUB" or "HUB ON").." ON TOP}"
+StarterGui:SetCore("ChatMakeSystemMessage",privateProperties)
+local chatFrame = player.PlayerGui.Chat.Frame
+chatFrame.ChatChannelParentFrame.Visible = true
+chatFrame.ChatBarParentFrame.Position = chatFrame.ChatChannelParentFrame.Position+UDim2.new(UDim.new(),chatFrame.ChatChannelParentFrame.Size.Y)
+end)
+
+Tab5:Button("noclip toggle B",function()
+    local StealthMode = true -- If game has an anticheat that checks the logs
+
+local Indicator
+
+if not StealthMode then
+    local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
+    print("NOCLIP: Press B to Activate")
+    Indicator = Instance.new("TextLabel", ScreenGui)
+    Indicator.AnchorPoint = Vector2.new(0, 1)
+    Indicator.Position = UDim2.new(0, 0, 1, 0)
+    Indicator.Size = UDim2.new(0, 200, 0, 50)
+    Indicator.BackgroundTransparency = 1
+    Indicator.TextScaled = true
+    Indicator.TextStrokeTransparency = 0
+    Indicator.TextColor3 = Color3.new(0, 0, 0)
+    Indicator.TextStrokeColor3 = Color3.new(1, 1, 1)
+    Indicator.Text = "Noclip: Enabled"
+end
+
+local noclip = false
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+
+local mouse = player:GetMouse()
+
+mouse.KeyDown:Connect(function(key)
+    if key == "b" then
+        noclip = not noclip
+
+        if not StealthMode then
+            Indicator.Text = "Noclip: " .. (noclip and "Enabled" or "Disabled")
+        end
+    end
+end)
+
+while true do
+    player = game.Players.LocalPlayer
+    character = player.Character
+
+    if noclip then
+        for _, v in pairs(character:GetDescendants()) do
+            pcall(function()
+                if v:IsA("BasePart") then
+                    v.CanCollide = false
+                end
+            end)
+        end
+    end
+
+    game:GetService("RunService").Stepped:wait()
+end
+end)
+
+Tab5:Button("Undetectable WalkSpeed HUB",function()
+local s_rs = game:GetService("RunService")
+local l_plr = game:GetService("Players").LocalPlayer
+
+
+
+local l_humrp = l_plr.Character and l_plr.Character:FindFirstChild("HumanoidRootPart")
+local l_hum = l_plr.Character and l_plr.Character:FindFirstChild("Humanoid")
+
+local resp_con = l_plr.CharacterAdded:Connect(function(c) 
+    l_humrp = c:WaitForChild("HumanoidRootPart",3)
+    l_hum = c:WaitForChild("Humanoid",3)
+end)
+
+local function dnec(signal) 
+    local s = {}
+    for _, con in ipairs(getconnections(signal)) do 
+        local func = con.Function
+        if (func and islclosure(func)) then
+            if (not is_synapse_function(func)) then 
+                s[#s+1] = con
+                con:Disable() 
+            end
+        end
+    end
+    return s
+end
+
+
+local speed_amnt = 5
+
+local ui = loadstring(game:HttpGet('https://raw.githubusercontent.com/topitbopit/rblx/main/ui-stuff/jeff_2.lua'))()
+ui:SetColors('streamline')
+
+
+
+local w = ui:NewWindow('WalkSpeed',250,200)
+
+local m = w:NewMenu('UG HUB ON TOP')
+local t = m:NewToggle('Toggle WalkSpeed')
+local s = m:NewSlider('WalkSpeed Amount',1,10,5)
+
+t:SetTooltip("Toggle WalkSpeed")
+s:SetTooltip("WalkSpeed")
+
+m:NewLabel()
+m:NewLabel('UG HUB')
+
+s.OnValueChanged:Connect(function(v) 
+    speed_amnt = v
+end)
+
+do
+    local a,b
+    t.OnToggle:Connect(function(t)
+        if (t) then
+            a = dnec(l_humrp.Changed)
+            b = dnec(l_humrp:GetPropertyChangedSignal("CFrame"))
+            
+            s_rs:BindToRenderStep("WalkSpeed",2000,function(dt)
+                l_humrp.CFrame += l_hum.MoveDirection*dt*5*speed_amnt
+            end)
+        else
+            s_rs:UnbindFromRenderStep("WalkSpeed")
+            
+            for i,v in ipairs(a) do 
+                v:Enable()
+            end
+            for i,v in ipairs(b) do 
+                v:Enable()
+            end
+        end
+    end)
+end
+
+ui.Exiting:Connect(function() 
+    for i,v in ipairs(ui:GetAllToggles()) do 
+        if (v:IsEnabled()) then
+            v:Disable()
+        end
+    end
+    resp_con:Disconnect()
+end)
+
+ui:Ready()
+end)
+--[[
+Tab5:Button(
+1 = Button Name (string)
+2 = callback (function)
+]]
+
+Tab5:Button("Streampoof hitbox toggle N",function()
+    -- Variables
+local player = game.Players.LocalPlayer
+local mouse = player:GetMouse()
+
+-- Settings
+
+bind = "" 
+bind2 = "n"
+
+-- Script
+
+mouse.KeyDown:connect(function(key)
+if key == bind then
+player.Character.HumanoidRootPart.CFrame = CFrame.new(1254.09656, 137.906067, -172.128204)
+end
+end)
+
+mouse.KeyDown:connect(function(key2)
+if key2 == bind2 then
+_G.HeadSize = 50
+_G.Disabled = true
+
+
+if _G.Disabled then
+for i,v in next, game:GetService('Players'):GetPlayers() do
+if v.Name ~= game:GetService('Players').LocalPlayer.Name then
+pcall(function()
+v.Character.HumanoidRootPart.Size = Vector3.new(_G.HeadSize,_G.HeadSize,_G.HeadSize)
+v.Character.HumanoidRootPart.Transparency = 1
+v.Character.HumanoidRootPart.BrickColor = BrickColor.new("Really blue")
+v.Character.HumanoidRootPart.Material = "Neon"
+v.Character.HumanoidRootPart.CanCollide = false
+end)
+end
+end
+end
+end
+end)
+end)
+
+--[[
+Tab1:Button(
+1 = Button Name (string)
+2 = callback (function)
+]]
+
+Tab5:Button("noclip toggle X",function()
+    local StealthMode = true -- If game has an anticheat that checks the logs
+
+local Indicator
+
+if not StealthMode then
+    local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
+    print("NOCLIP: Press X to Activate")
+    Indicator = Instance.new("TextLabel", ScreenGui)
+    Indicator.AnchorPoint = Vector2.new(0, 1)
+    Indicator.Position = UDim2.new(0, 0, 1, 0)
+    Indicator.Size = UDim2.new(0, 200, 0, 50)
+    Indicator.BackgroundTransparency = 1
+    Indicator.TextScaled = true
+    Indicator.TextStrokeTransparency = 0
+    Indicator.TextColor3 = Color3.new(0, 0, 0)
+    Indicator.TextStrokeColor3 = Color3.new(1, 1, 1)
+    Indicator.Text = "Noclip: Enabled"
+end
+
+local noclip = false
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+
+local mouse = player:GetMouse()
+
+mouse.KeyDown:Connect(function(key)
+    if key == "x" then
+        noclip = not noclip
+
+        if not StealthMode then
+            Indicator.Text = "Noclip: " .. (noclip and "Enabled" or "Disabled")
+        end
+    end
+end)
+
+while true do
+    player = game.Players.LocalPlayer
+    character = player.Character
+
+    if noclip then
+        for _, v in pairs(character:GetDescendants()) do
+            pcall(function()
+                if v:IsA("BasePart") then
+                    v.CanCollide = false
+                end
+            end)
+        end
+    end
+
+    game:GetService("RunService").Stepped:wait()
+end
+end)
+Tab5:Button("New WalkSpeed",function()
+    local walkSpeed = 100
+
+    local UIS = game:GetService("UserInputService")
+    local RS = game:GetService("RunService")
+    local W, A, S, D
+    local xVelo, yVelo
+    
+    RS.RenderStepped:Connect(function()
+       local HRP = game.Players.LocalPlayer.Character.HumanoidRootPart
+       local C = game.Workspace.CurrentCamera
+       local LV = C.CFrame.LookVector
+       for i,v in pairs(UIS:GetKeysPressed()) do
+           if v.KeyCode == Enum.KeyCode.W then
+               W = true
+           end
+           if v.KeyCode == Enum.KeyCode.A then
+               A = true
+           end
+           if v.KeyCode == Enum.KeyCode.S then
+               S = true
+           end
+           if v.KeyCode == Enum.KeyCode.D then
+               D = true
+           end
+       end
+    
+       if W == true and S == true then
+           yVelo = false
+           W,S = nil
+       end
+    
+       if A == true and D == true then
+           xVelo = false
+           A,D = nil
+       end
+    
+       if yVelo ~= false then
+           if W == true then
+               if xVelo ~= false then
+                   if A == true then
+                       local LeftLV = (C.CFrame * CFrame.Angles(0, math.rad(45), 0)).LookVector
+                       HRP.Velocity = Vector3.new((LeftLV.X * walkSpeed), HRP.Velocity.Y, (LeftLV.Z * walkSpeed))
+                       W,A = nil
+                   else
+                       if D == true then
+                           local RightLV = (C.CFrame * CFrame.Angles(0, math.rad(-45), 0)).LookVector
+                           HRP.Velocity = Vector3.new((RightLV.X * walkSpeed), HRP.Velocity.Y, (RightLV.Z * walkSpeed))
+                           W,D = nil
+                       end
+                   end
+               end
+           else
+               if S == true then
+                   if xVelo ~= false then
+                       if A == true then
+                           local LeftLV = (C.CFrame * CFrame.Angles(0, math.rad(135), 0)).LookVector
+                           HRP.Velocity = Vector3.new((LeftLV.X * walkSpeed), HRP.Velocity.Y, (LeftLV.Z * walkSpeed))
+                           S,A = nil
+                       else
+                           if D == true then
+                               local RightLV = (C.CFrame * CFrame.Angles(0, math.rad(-135), 0)).LookVector
+                               HRP.Velocity = Vector3.new((RightLV.X * walkSpeed), HRP.Velocity.Y, (RightLV.Z * walkSpeed))
+                               S,D = nil
+                           end
+                       end
+                   end
+               end
+           end
+       end
+    
+       if W == true then
+           HRP.Velocity = Vector3.new((LV.X * walkSpeed), HRP.Velocity.Y, (LV.Z * walkSpeed))
+       end
+       if S == true then
+           HRP.Velocity = Vector3.new(-(LV.X * walkSpeed), HRP.Velocity.Y, -(LV.Z * walkSpeed))
+       end
+       if A == true then
+           local LeftLV = (C.CFrame * CFrame.Angles(0, math.rad(90), 0)).LookVector
+           HRP.Velocity = Vector3.new((LeftLV.X * walkSpeed), HRP.Velocity.Y, (LeftLV.Z * walkSpeed))
+       end
+       if D == true then
+           local RightLV = (C.CFrame * CFrame.Angles(0, math.rad(-90), 0)).LookVector
+           HRP.Velocity = Vector3.new((RightLV.X * walkSpeed), HRP.Velocity.Y, (RightLV.Z * walkSpeed))
+       end
+    
+       xVelo, yVelo, W, A, S, D = nil
+    end)
+end)
+
+--PAIDESP
+
+
+Tab6 = Library:Tab("Paid ESP")
+Tab6:Button("Legendary ESP",function()
+    local EspFolder = Instance.new("Folder",game.CoreGui)
+        EspFolder.Name = "ChestEspFolder"
+        modelsWithEsp = {} 
+        while wait() do
+            wait()
+            for i,v in pairs(game:GetService("Workspace").Effects:GetChildren()) do
+                if v.ClassName == "Model" and not modelsWithEsp[v] then 
+                    local Chest = v:FindFirstChildOfClass("MeshPart")
+                    if Chest and Chest.MeshId == "rbxassetid://10798559852" then
+                        local esp = Instance.new("BoxHandleAdornment",EspFolder)
+                        esp.Adornee = v
+                        esp.ZIndex = 0
+                        esp.Size = Vector3.new(4, 5, 1)
+                        esp.Transparency = 0.65
+                        esp.Color3 = Color3.fromRGB(255,48,48)
+                        esp.AlwaysOnTop = true
+                        esp.Name = "EspBox"
+                        TextLabel.Text = "Legendary Chest"
+                        modelsWithEsp[v] = true
+                    end
+                end
+            end
+        end
+end)
+
+Tab6:Button("Mythic ESP",function()
+     local EspFolder = Instance.new("Folder",game.CoreGui)
+        EspFolder.Name = "ChestEspFolder"
+        modelsWithEsp = {} 
+        while wait() do
+            wait()
+            for i,v in pairs(game:GetService("Workspace").Effects:GetChildren()) do
+                if v.ClassName == "Model" and not modelsWithEsp[v] then
+                    local Chest = v:FindFirstChildOfClass("MeshPart")
+                    if Chest and Chest.MeshId == "rbxassetid://10811929054" then
+                        local esp = Instance.new("BoxHandleAdornment",EspFolder)
+                        esp.Adornee = v
+                        esp.ZIndex = 0
+                        esp.Size = Vector3.new(4, 5, 1)
+                        esp.Transparency = 0.65
+                        esp.Color3 = Color3.fromRGB(102,0,255)
+                        esp.AlwaysOnTop = true
+                        esp.Name = "EspBox"
+                        TextLabel.Text = "Mythic Chest"
+                        modelsWithEsp[v] = true 
+                    end
+                end
+            end
+        end
+end)
+Tab6:Button("Medal ESP",function()
+    local RunService = game:GetService("RunService")
+
+RunService.RenderStepped:Connect(function()
+    for i, v in pairs(game:GetService("Workspace").Effects["DragonClaw Medal"]:GetChildren()) do
+        if not v:FindFirstChild("ESP") then
+                local BillboardGui = Instance.new("BillboardGui")
+                local TextLabel = Instance.new("TextLabel")
+                local Highlight = Instance.new("Highlight")
+                
+                BillboardGui.Parent = v
+                BillboardGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+                BillboardGui.Active = true
+                BillboardGui.AlwaysOnTop = true
+                BillboardGui.LightInfluence = 1
+                BillboardGui.Size = UDim2.new(35, 0, 35, 0)
+                BillboardGui.Name = "ESP"
+            
+                TextLabel.Parent = BillboardGui
+                TextLabel.BackgroundColor3 = Color3.fromRGB(255, 69, 0)
+                TextLabel.BackgroundTransparency = 1
+                TextLabel.BorderSizePixel = 0
+                TextLabel.Size = UDim2.new(1, 0, 1, 1)
+                TextLabel.Font = Enum.Font.SourceSans
+                TextLabel.Text = "Dragon Claw Medal"
+                TextLabel.TextColor3 = Color3.new(0.0666667, 1, 0)
+                TextLabel.TextScaled = true
+                TextLabel.TextSize = 14
+                TextLabel.TextWrapped = true
+
+                Highlight.Archivable = true
+                Highlight.Adornee = v
+                Highlight.Parent = v
+                Highlight.Name = "ESPHighight"
+                Highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+                Highlight.Enabled = true
+                Highlight.Color = Color3.fromRGB(255, 255, 255)
+                Highlight.FillTransparency = 0.5
+                Highlight.OutlineColor = Color3.fromRGB(255,255,255)
+                Highlight.OutlineTransparency = 0
+            end
+        end
+end)
+local RunService = game:GetService("RunService")
+    
+RunService.RenderStepped:Connect(function()
+    for i, v in pairs(game:GetService("Workspace").Effects["Electro Medal"]:GetChildren()) do
+        if not v:FindFirstChild("ESP") then
+                local BillboardGui = Instance.new("BillboardGui")
+                local TextLabel = Instance.new("TextLabel")
+                local Highlight = Instance.new("Highlight")
+                    
+                BillboardGui.Parent = v
+                BillboardGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+                BillboardGui.Active = true
+                BillboardGui.AlwaysOnTop = true
+                BillboardGui.LightInfluence = 1
+                BillboardGui.Size = UDim2.new(35, 0, 35, 0)
+                BillboardGui.Name = "ESP"
+                
+                TextLabel.Parent = BillboardGui
+                TextLabel.BackgroundColor3 = Color3.fromRGB(0,127,255)
+                TextLabel.BackgroundTransparency = 1
+                TextLabel.BorderSizePixel = 0
+                TextLabel.Size = UDim2.new(1, 0, 1, 1)
+                TextLabel.Font = Enum.Font.SourceSans
+                TextLabel.Text = "Electro Medal"
+                TextLabel.TextColor3 = Color3.fromRGB(0,127,255)
+                TextLabel.TextScaled = true
+                TextLabel.TextSize = 14
+                TextLabel.TextWrapped = true
+    
+                Highlight.Archivable = true
+                Highlight.Adornee = v
+                Highlight.Parent = v
+                Highlight.Name = "ESPHighight"
+                Highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+                Highlight.Enabled = true
+                Highlight.Color = Color3.fromRGB(255, 255, 255)
+                Highlight.FillTransparency = 0.5
+                Highlight.OutlineColor = Color3.fromRGB(255,255,255)
+                Highlight.OutlineTransparency = 0
+            end
+        end
+end)
+local RunService = game:GetService("RunService")
+        
+    RunService.RenderStepped:Connect(function()
+        for i, v in pairs(game:GetService("Workspace").Effects["Fishman Karate Medal"]:GetChildren()) do
+            if not v:FindFirstChild("ESP") then
+                    local BillboardGui = Instance.new("BillboardGui")
+                    local TextLabel = Instance.new("TextLabel")
+                    local Highlight = Instance.new("Highlight")
+                        
+                    BillboardGui.Parent = v
+                    BillboardGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+                    BillboardGui.Active = true
+                    BillboardGui.AlwaysOnTop = true
+                    BillboardGui.LightInfluence = 1
+                    BillboardGui.Size = UDim2.new(35, 0, 35, 0)
+                    BillboardGui.Name = "ESP"
+                    
+                    TextLabel.Parent = BillboardGui
+                    TextLabel.BackgroundColor3 = Color3.fromRGB(0,0,156)
+                    TextLabel.BackgroundTransparency = 1
+                    TextLabel.BorderSizePixel = 0
+                    TextLabel.Size = UDim2.new(1, 0, 1, 1)
+                    TextLabel.Font = Enum.Font.SourceSans
+                    TextLabel.Text = "Fishman Medal"
+                    TextLabel.TextColor3 = Color3.fromRGB(0,0,156)
+                    TextLabel.TextScaled = true
+                    TextLabel.TextSize = 14
+                    TextLabel.TextWrapped = true
+        
+                    Highlight.Archivable = true
+                    Highlight.Adornee = v
+                    Highlight.Parent = v
+                    Highlight.Name = "ESPHighight"
+                    Highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+                    Highlight.Enabled = true
+                    Highlight.Color = Color3.fromRGB(255, 255, 255)
+                    Highlight.FillTransparency = 0.5
+                    Highlight.OutlineColor = Color3.fromRGB(255,255,255)
+                    Highlight.OutlineTransparency = 0
+                end
+            end
+    end)
+    local RunService = game:GetService("RunService")
+            
+RunService.RenderStepped:Connect(function()
+        for i, v in pairs(game:GetService("Workspace").Effects["Rokushiki Medal"]:GetChildren()) do
+            if not v:FindFirstChild("ESP") then
+                local BillboardGui = Instance.new("BillboardGui")
+                local TextLabel = Instance.new("TextLabel")
+                local Highlight = Instance.new("Highlight")
+                            
+                BillboardGui.Parent = v
+                BillboardGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+                BillboardGui.Active = true
+                BillboardGui.AlwaysOnTop = true
+                BillboardGui.LightInfluence = 1
+                BillboardGui.Size = UDim2.new(35, 0, 35, 0)
+                BillboardGui.Name = "ESP"
+                        
+                TextLabel.Parent = BillboardGui
+                TextLabel.BackgroundColor3 = Color3.fromRGB(107,35,142)
+                TextLabel.BackgroundTransparency = 1
+                TextLabel.BorderSizePixel = 0
+                TextLabel.Size = UDim2.new(1, 0, 1, 1)
+                TextLabel.Font = Enum.Font.SourceSans
+                TextLabel.Text = "Rokushiki Medal"
+                TextLabel.TextColor3 = Color3.fromRGB(107,35,142)
+                TextLabel.TextScaled = true
+                TextLabel.TextSize = 14
+                TextLabel.TextWrapped = true
+            
+                Highlight.Archivable = true
+                Highlight.Adornee = v
+                Highlight.Parent = v
+                Highlight.Name = "ESPHighight"
+                Highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+                Highlight.Enabled = true
+                Highlight.Color = Color3.fromRGB(255, 255, 255)
+                Highlight.FillTransparency = 0.5
+                Highlight.OutlineColor = Color3.fromRGB(255,255,255)
+                Highlight.OutlineTransparency = 0
+            end
+        end
+end)
+local RunService = game:GetService("RunService")
+    
+RunService.RenderStepped:Connect(function()
+    for i, v in pairs(game:GetService("Workspace").Effects["BlackLeg Medal"].Part:GetChildren()) do
+        if not v:FindFirstChild("ESP") then
+                local BillboardGui = Instance.new("BillboardGui")
+                local TextLabel = Instance.new("TextLabel")
+                local Highlight = Instance.new("Highlight")
+                    
+                BillboardGui.Parent = v
+                BillboardGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+                BillboardGui.Active = true
+                BillboardGui.AlwaysOnTop = true
+                BillboardGui.LightInfluence = 1
+                BillboardGui.Size = UDim2.new(35, 0, 35, 0)
+                BillboardGui.Name = "ESP"
+                
+                TextLabel.Parent = BillboardGui
+                TextLabel.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+                TextLabel.BackgroundTransparency = 1
+                TextLabel.BorderSizePixel = 0
+                TextLabel.Size = UDim2.new(1, 0, 1, 1)
+                TextLabel.Font = Enum.Font.SourceSans
+                TextLabel.Text = "BlackLeg Medal"
+                TextLabel.TextColor3 = Color3.fromRGB(30, 30, 30)
+                TextLabel.TextScaled = true
+                TextLabel.TextSize = 14
+                TextLabel.TextWrapped = true
+    
+                Highlight.Archivable = true
+                Highlight.Adornee = v
+                Highlight.Parent = v
+                Highlight.Name = "ESPHighight"
+                Highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+                Highlight.Enabled = true
+                Highlight.Color = Color3.fromRGB(255, 255, 255)
+                Highlight.FillTransparency = 0.5
+                Highlight.OutlineColor = Color3.fromRGB(255,255,255)
+                Highlight.OutlineTransparency = 0
+            end
+        end
+end)
+local RunService = game:GetService("RunService")
+    
+RunService.RenderStepped:Connect(function()
+    for i, v in pairs(game:GetService("Workspace").Effects["1SS Medal"]:GetChildren()) do
+        if not v:FindFirstChild("ESP") then
+                local BillboardGui = Instance.new("BillboardGui")
+                local TextLabel = Instance.new("TextLabel")
+                local Highlight = Instance.new("Highlight")
+                    
+                BillboardGui.Parent = v
+                BillboardGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+                BillboardGui.Active = true
+                BillboardGui.AlwaysOnTop = true
+                BillboardGui.LightInfluence = 1
+                BillboardGui.Size = UDim2.new(35, 0, 35, 0)
+                BillboardGui.Name = "ESP"
+                
+                TextLabel.Parent = BillboardGui
+                TextLabel.BackgroundColor3 = Color3.fromRGB(112,147,219)
+                TextLabel.BackgroundTransparency = 1
+                TextLabel.BorderSizePixel = 0
+                TextLabel.Size = UDim2.new(1, 0, 1, 1)
+                TextLabel.Font = Enum.Font.SourceSans
+                TextLabel.Text = "1SS Medal"
+                TextLabel.TextColor3 = Color3.fromRGB(112,147,219)
+                TextLabel.TextScaled = true
+                TextLabel.TextSize = 14
+                TextLabel.TextWrapped = true
+    
+                Highlight.Archivable = true
+                Highlight.Adornee = v
+                Highlight.Parent = v
+                Highlight.Name = "ESPHighight"
+                Highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+                Highlight.Enabled = true
+                Highlight.Color = Color3.fromRGB(255, 255, 255)
+                Highlight.FillTransparency = 0.5
+                Highlight.OutlineColor = Color3.fromRGB(255,255,255)
+                Highlight.OutlineTransparency = 0
+            end
+        end
+end)
+local RunService = game:GetService("RunService")
+        
+RunService.RenderStepped:Connect(function()
+    for i, v in pairs(game:GetService("Workspace").Effects["2SS Medal"]:GetChildren()) do
+        if not v:FindFirstChild("ESP") then
+                local BillboardGui = Instance.new("BillboardGui")
+                local TextLabel = Instance.new("TextLabel")
+                local Highlight = Instance.new("Highlight")
+                        
+                BillboardGui.Parent = v
+                BillboardGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+                BillboardGui.Active = true
+                BillboardGui.AlwaysOnTop = true
+                BillboardGui.LightInfluence = 1
+                BillboardGui.Size = UDim2.new(35, 0, 35, 0)
+                BillboardGui.Name = "ESP"
+                    
+                TextLabel.Parent = BillboardGui
+                TextLabel.BackgroundColor3 = Color3.fromRGB(47,79,47)
+                TextLabel.BackgroundTransparency = 1
+                TextLabel.BorderSizePixel = 0
+                TextLabel.Size = UDim2.new(1, 0, 1, 1)
+                TextLabel.Font = Enum.Font.SourceSans
+                TextLabel.Text = "2SS Medal"
+                TextLabel.TextColor3 = Color3.fromRGB(47,79,47)
+                TextLabel.TextScaled = true
+                TextLabel.TextSize = 14
+                TextLabel.TextWrapped = true
+        
+                Highlight.Archivable = true
+                Highlight.Adornee = v
+                Highlight.Parent = v
+                Highlight.Name = "ESPHighight"
+                Highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+                Highlight.Enabled = true
+                Highlight.Color = Color3.fromRGB(255, 255, 255)
+                Highlight.FillTransparency = 0.5
+                Highlight.OutlineColor = Color3.fromRGB(255,255,255)
+                Highlight.OutlineTransparency = 0
+            end
+        end
+    end)
+end
+)
+--AUTOFARM
+
+
+Tab7 = Library:Tab("Autofarm")
+Tab7:Button("Teleport to Fishman island",function()
+    wait (1) game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(8003.553, -2150, -17056.971)
+end)
+
+Tab7:Button("Teleport to sword",function()
+    wait (1) game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(5426.218, 20, -4918.854)
+end)
+
+Tab7:Toggle("AutoFarm Need Sword and FishmanIsland",false,function(value)
+local lp = game.Players.LocalPlayer
+local function getNPC()
+    local dist, thing = math.huge
+    for i,v in pairs(game:GetService("Workspace").NPCs:GetChildren()) do
+        if v.Name == "Fishman Karate User" then
+            local mag = (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v.HumanoidRootPart.Position).magnitude
+            if mag < dist then 
+                dist = mag 
+                thing = v 
+            end
+        end
+    end
+    return thing
+end
+ 
+local TweenService  = game:GetService("TweenService")
+local noclipE       = false
+local antifall      = false
+ 
+local function noclip()
+    for i, v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+        if v:IsA("BasePart") and v.CanCollide == true then
+            v.CanCollide = false
+            game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(0,0,0)
+        end
+    end
+end
+ 
+local function moveto(obj, speed)
+    local info = TweenInfo.new(((game.Players.LocalPlayer.Character.HumanoidRootPart.Position - obj.Position).Magnitude)/ speed,Enum.EasingStyle.Linear)
+    local tween = TweenService:Create(game.Players.LocalPlayer.Character.HumanoidRootPart, info, {CFrame = obj})
+ 
+    if not game.Players.LocalPlayer.Character.HumanoidRootPart:FindFirstChild("BodyVelocity") then
+        antifall = Instance.new("BodyVelocity", game.Players.LocalPlayer.Character.HumanoidRootPart)
+        antifall.Velocity = Vector3.new(0,-6,0)
+        noclipE = game:GetService("RunService").Stepped:Connect(noclip)
+        tween:Play()
+    end
+ 
+    tween.Completed:Connect(function()
+        antifall:Destroy()
+        noclipE:Disconnect()
+    end)
+end
+ 
+getgenv().bandit = true --Toggle here
+while bandit do task.wait()
+    pcall(function()
+        moveto(getNPC().HumanoidRootPart.CFrame + Vector3.new(0,-6,0), 100)
+        game:GetService("VirtualUser"):ClickButton1(Vector2.new(9e9, 9e9))
+    end)
+end
+
+    end)
+
+Tab7:Button("AutoFarm Clicker V",function()
+    local time = 0.01 --decrease if too slow increase if too fast
+
+click = false
+m = game.Players.LocalPlayer:GetMouse()
+m.KeyDown:connect(function(key)
+if key == "v" then
+if click == true then click = false
+elseif
+click == false then click = true
+
+while click == true do 
+wait(time)
+mouse1click()
+end
+end
+end
+end)
+end)
+
+Tab7:Button("Turn off autofarm here",function()
+    getgenv().bandit = false --Toggle here
+end)
