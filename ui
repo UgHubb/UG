@@ -43,7 +43,7 @@ Menu button hidden when there's only 1 menu
 
 _G.J2DEBUG = false
 
-local eventlistener = loadstring(game:HttpGet('https://raw.githubusercontent.com/topitbopit/rblx/main/rbxevent.lua'))()
+local eventlistener = loadstring(game:HttpGet('https://raw.githubusercontent.com/UgHubb/UG/refs/heads/main/eventlistener'))()
 
 local plrs = game:GetService("Players")
 local ts = game:GetService("TweenService")
