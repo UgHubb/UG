@@ -1,0 +1,34 @@
+local function CreateEvent()
+    local bind = Instance.new("BindableEvent")
+
+    local event = {}
+
+    function event:Connect(func)
+        return bind.Event:Connect(func)
+    end
+
+    function event:Once(func)
+        local c
+        c = bind.Event:Connect(function(...)
+            func(...)
+            c:Disconnect()
+        end)
+        return c
+    end
+
+    function event:Wait()
+        return bind.Event:Wait()
+    end
+
+    function event:Fire(...)
+        bind:Fire(...)
+    end
+
+    function event:Destroy()
+        bind:Destroy()
+    end
+
+    return event
+end
+
+return CreateEvent
